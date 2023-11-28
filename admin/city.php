@@ -15,7 +15,7 @@ if (isset($_REQUEST['submit'])) {
       echo ("city added");
       $countries = $database->getCountries();
       $states = $database->getstates();
-      
+      // $states = $database->getallstatesbycountry();
     } else {
       echo ("city not added");
     }
@@ -88,8 +88,8 @@ if (isset($_REQUEST['submit'])) {
               <div class="modal-body ">
                 <div class="form-group">
                   <label class="control-label">Country</label>
-                  <select name="country_id" id="country_id" class="form-control input-sm">
-                    <option>Selecet Country</option>
+                  <select name="country_id" id="country" class="form-control input-sm">
+                    <option>Select Country</option>
                     <?php foreach ($countries as $country) : ?>
                       <option value="<?php echo $country['id']; ?>"><?php echo $country['country_name']; ?></option>
                     <?php endforeach; ?>
@@ -98,10 +98,8 @@ if (isset($_REQUEST['submit'])) {
                 <div class="form-group">
                   <label class="control-label">State</label>
                   <select name="state_id" id="state_id" class="form-control input-sm">
-                    <option>Selecet State</option>
-                    <?php foreach ($states as $state) : ?>
-                      <option value="<?php echo $state['id']; ?>"><?php echo $state['state_name']; ?></option>
-                    <?php endforeach; ?>
+                    <option>Select  State</option>
+            
                   </select>
                 </div>
                 <div class="form-group">
@@ -136,6 +134,10 @@ if (isset($_REQUEST['submit'])) {
           echo "<tr>";
           echo "<td>" . $city['city_name'] . "</td>";
           echo "<td>" . $city['city_currency'] . "</td>";
+
+          // $country_id = $city['country_id'];
+          // $country_name = $database->getCountryNameById($country_id); // Replace this with the actual function name you use
+          // echo "<td>" . $country_name . "</td>";
           echo "</tr>";
         }
         ?>
@@ -149,6 +151,26 @@ if (isset($_REQUEST['submit'])) {
 
 
   </main>
+  <script>
+    $(document).ready(function(){
+      jQuery('#country').change(function(){
+        var id=jQuery(this).val();
+        jQuery.ajax({
+          type : 'post',
+          url : 'get_data.php',
+          data : {
+            id:id
+          },
+          success : function(result){
+            // alert(result);
+            jQuery('#state_id').html(result);
+            // console.log(result);
+          }
+        })
+      })
+
+    })
+  </script>
 
   <!--   Core JS Files   -->
   <?php

@@ -5,6 +5,15 @@ $obj = new Database();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+<style>
+    body {
+        background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg');
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+        margin: 0;
+    }
+</style>
 
 <head>
   <meta charset="utf-8" />

@@ -3,6 +3,30 @@ include '../database/connection.php';
 session_start();
 $result = "";
 $countries = "";
+
+// if(isset($_POST['delete_country'])) {
+//   $id = $_POST['delete_country'];
+//   try {
+//       $query = "DELETE FROM country1 WHERE id=:id";
+//       $statement = $conn->prepare($query);
+//       $statement->execute(['id' => $id]);
+
+//       // Check if the deletion was successful
+//       $rowCount = $statement->rowCount();
+//       if ($rowCount > 0) {
+//           echo "Country deleted successfully";
+
+//           // Redirect back to the original page after successful deletion
+//           header("Location: ".$_SERVER['HTTP_REFERER']);
+//           exit();
+//       } else {
+//           echo "Failed to delete country";
+//       }
+//   } catch (PDOException $e) {
+//       echo $e->getMessage();
+//   }
+// }
+
 if (isset($_REQUEST['submit'])) {
   if (($_REQUEST['country_name'] == "") || ($_REQUEST['country_code'] == "")) {
     echo "All fields are required";
@@ -88,8 +112,8 @@ $countries = $database->getCountries();
 
             </div>
             <div class="modal-body">
-              <form action="country.php"  method="post">
-        
+              <form action="country.php" method="post">
+
                 <div class="modal-body ">
                   <div class="form-group">
                     <label class="control-label"><b>Enter Country Name:</b></label>
@@ -101,36 +125,50 @@ $countries = $database->getCountries();
                     <input type="text" class="form-control input-sm " name="country_name" value="" placeholder="Enter Code">
                   </div>
                 </div>
-                  <div class="modal-footer">
-                    <input type="submit" name="submit" class="btn btn-sm btn-primary">
-                  </div>
+                <div class="modal-footer">
+                  <input type="submit" name="submit" class="btn btn-sm btn-primary">
                 </div>
-              </form>
             </div>
+            </form>
           </div>
         </div>
       </div>
-      <div>
-        <table class="table table-dark">
-          <thead>
-            <tr>
-              <th scope="col">id</th>
-              <th scope="col">Country name</th>
-              <th scope="col">Country code</th>
-            </tr>
-          </thead>
-          <?php
-          // Loop through the $countries array and display each row
-          foreach ($countries as $country) {
-            echo "<tr>";
-            echo "<td>" . $country['id'] . "</td>";
-            echo "<td>" . $country['country_name'] . "</td>";
-            echo "<td>" . $country['country_code'] . "</td>";
-            echo "</tr>";
-          }
-          ?>
-        </table>
-      </div>
+    </div>
+    <div>
+      <table class="table table-dark">
+        <thead>
+          <tr>
+            <th scope="col">S/no</th>
+            <th scope="col">Country ID</th>
+            <th scope="col">Country name</th>
+            <th scope="col">Country code</th>
+            <!-- <th scope="col"></th> -->
+            <th scope="col">Delete</th>
+            <th scope="col">Edit</th>
+          </tr>
+        </thead>
+        <?php
+        // Initialize serial number
+        $serialNumber = 1;
+
+        // Loop through the $countries array and display each row
+        foreach ($countries as $country) {
+          echo "<tr>";
+          echo "<td>" . $serialNumber . "</td>";
+          echo "<td>" . $country['id'] . "</td>";
+          echo "<td>" . $country['country_name'] . "</td>";
+          echo "<td>" . $country['country_code'] . "</td>";
+          // echo "<td></td>";
+          echo "<td><button class='btn btn-danger'><a href='delete.php?deleteid=" . $country['id'] . "'>delete</a></button></td>";
+          echo "<td><button class='btn btn-warning'><a href='edit.php?editid=". $country['id']."'>edit</a></button></td>";
+          echo "</tr>";
+
+          // Increment the serial number for the next row
+          $serialNumber++;
+        }
+        ?>
+      </table>
+    </div>
 
     </div>
 
@@ -144,3 +182,6 @@ $countries = $database->getCountries();
 </body>
 
 </html>
+
+<!-- <form method='post' action='country.php'>"; -->
+<!-- <input type='hidden' name='delete_country' value='" . $country[' id'] . "'>" ; // echo "<button type='submit' class='btn btn-danger'>Delete</button>" ; // echo "</form>" ; -->

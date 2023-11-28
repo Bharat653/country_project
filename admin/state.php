@@ -21,9 +21,10 @@ if (isset($_REQUEST['submit'])) {
 }
 $countries = $database->getCountries();
 $states = $database->getstates();
-$states = $database->getallstatesbycountry($country_id);
-print_r($state);
-        exit();
+
+// $states = $database->getallstatesbycountry($country_id);
+// print_r($state);
+//         exit();
 // $state = $database->getstates();
 ?>
 <!DOCTYPE html>
@@ -141,13 +142,21 @@ print_r($state);
           </thead>
           <?php
           // Loop through the $countries array and display each row
-          foreach ($states as $state) {
-            echo "<tr>";
-            echo "<td>" . $state['state_name'] . "</td>";
-            echo "<td>" . $state['state_code'] . "</td>";
-            echo "<td>" . $country['country_name'] . "</td>";
-            echo "</tr>";
-          }
+          
+          // print_r($states);x
+          // die($states);
+         foreach ($states as $state) {
+    echo "<tr>";
+    echo "<td>" . $state['state_name'] . "</td>";
+    echo "<td>" . $state['state_code'] . "</td>";
+
+    // Fetch the corresponding country name using the country ID
+    $country_id = $state['country_id'];
+    $country_name = $database->getCountryNameById($country_id); // Replace this with the actual function name you use
+    echo "<td>" . $country_name . "</td>";
+
+    echo "</tr>";
+}
           ?>
           <tbody>
 
