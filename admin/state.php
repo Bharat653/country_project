@@ -1,10 +1,39 @@
 <?php
 include '../database/connection.php';
 session_start();
+if(!isset($_SESSION['authuser'])){
+  header('Location:../index.php');
+}
 $result = "";
 $state = "";
 $country_id = "";
 // $states = "";
+
+if (isset($_POST['updateEdit1'])) {
+  // Get the form data
+  
+  $state_id = $_POST['state_id'];
+  $state_name = $_POST['state_name'];
+  $state_code = $_POST['state_code'];
+  $country_name = $_POST['country_name'];
+ 
+
+  echo($state_id);
+  echo($state_name);
+  echo($state_code);
+  echo($country_name);
+
+  // Update the country information in the database\
+  $database = new Database;
+  $result = $database->updateEdit(['state_id' => $state_id, 'state_name' => $state_name, 'state_code' => $state_code, 'country_name' =>$country_name]);
+  if ($result) {
+      echo "state updated successfully";
+  } else {
+      echo "Failed to update country";
+  }
+}
+
+
 if (isset($_REQUEST['submit'])) {
   if (($_REQUEST['state_name'] == "") || ($_REQUEST['state_code'] == "")) {
     echo "All fields are required";
@@ -22,10 +51,7 @@ if (isset($_REQUEST['submit'])) {
 $countries = $database->getCountries();
 $states = $database->getstates();
 
-// $states = $database->getallstatesbycountry($country_id);
-// print_r($state);
-//         exit();
-// $state = $database->getstates();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -108,7 +134,7 @@ $states = $database->getstates();
               </form>
 
             </div>
-              <div></div>
+            <div></div>
           </div>
         </div>
       </div>
@@ -131,32 +157,40 @@ $states = $database->getstates();
         <table class="table table-dark">
           <thead>
             <tr>
-            <!-- <th scope="col">state No</th>           -->
+              <!-- <th scope="col">state No</th>           -->
+              <th scope="col">S/no</th>
               <th scope="col">state Name</th>
               <th scope="col">state Code</th>
               <th scope="col">Country name</th>
+              <th scope="col">Delete</th>
+              <th scope="col">Edit</th>
 
               <!-- <th scope="col">Country Name</th> -->
               <!-- <th scope="col">state currency</th> -->
             </tr>
           </thead>
           <?php
+          $serialnumber = 1;
           // Loop through the $countries array and display each row
-          
+
           // print_r($states);x
           // die($states);
-         foreach ($states as $state) {
-    echo "<tr>";
-    echo "<td>" . $state['state_name'] . "</td>";
-    echo "<td>" . $state['state_code'] . "</td>";
+          foreach ($states as $state) {
+            echo "<tr>";
+            echo "<td>" . $serialnumber . "</td>";
+            echo "<td>" . $state['state_name'] . "</td>";
+            echo "<td>" . $state['state_code'] . "</td>";
 
-    // Fetch the corresponding country name using the country ID
-    $country_id = $state['country_id'];
-    $country_name = $database->getCountryNameById($country_id); // Replace this with the actual function name you use
-    echo "<td>" . $country_name . "</td>";
-
-    echo "</tr>";
-}
+           
+            // Fetch the corresponding country name using the country ID
+            $country_id = $state['country_id'];
+            $country_name = $database->getCountryNameById($country_id); // Replace this with the actual function name you use
+            echo "<td>" . $country_name . "</td>";
+            echo "<td><button class='btn btn-danger'><a href='delete2.php?deleteid=" . $state['id'] . "'>delete</a></button></td>";
+            echo "<td><button class='btn btn-warning'><a href='edit2.php?editid=". $state['id']."'>edit</a></button></td>";
+            echo "</tr>";
+            $serialnumber++;
+          }
           ?>
           <tbody>
 

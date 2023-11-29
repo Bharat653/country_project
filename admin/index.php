@@ -1,5 +1,9 @@
 <?php
 require_once "../database/connection.php";
+session_start();
+if(!isset($_SESSION['authuser'])){
+  header('Location:../index.php');
+}
 $obj = new Database();
 // $obj->loggedIn();
 ?>

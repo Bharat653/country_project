@@ -1,31 +1,30 @@
 <?php
-include '../database/connection.php';
 session_start();
+if (!isset($_SESSION['authuser'])) {
+  header('Location:../index.php');
+}
+include '../database/connection.php';
+
 $result = "";
 $countries = "";
 
-// if(isset($_POST['delete_country'])) {
-//   $id = $_POST['delete_country'];
-//   try {
-//       $query = "DELETE FROM country1 WHERE id=:id";
-//       $statement = $conn->prepare($query);
-//       $statement->execute(['id' => $id]);
+// Check if the form is submitted for updating
+if (isset($_POST['updateEdit'])) {
+  // Get the form data
+  $country_id = $_POST['country_id'];
+  $country_name = $_POST['country_name'];
+  $country_code = $_POST['country_code'];
 
-//       // Check if the deletion was successful
-//       $rowCount = $statement->rowCount();
-//       if ($rowCount > 0) {
-//           echo "Country deleted successfully";
 
-//           // Redirect back to the original page after successful deletion
-//           header("Location: ".$_SERVER['HTTP_REFERER']);
-//           exit();
-//       } else {
-//           echo "Failed to delete country";
-//       }
-//   } catch (PDOException $e) {
-//       echo $e->getMessage();
-//   }
-// }
+  // Update the country information in the database\
+  $database = new Database;
+  $result = $database->updateEdit(['country_id' => $country_id, 'country_name' => $country_name, 'country_code' => $country_code]);
+  if ($result) {
+    echo "Country updated successfully";
+  } else {
+    echo "Failed to update country";
+  }
+}
 
 if (isset($_REQUEST['submit'])) {
   if (($_REQUEST['country_name'] == "") || ($_REQUEST['country_code'] == "")) {
@@ -160,7 +159,7 @@ $countries = $database->getCountries();
           echo "<td>" . $country['country_code'] . "</td>";
           // echo "<td></td>";
           echo "<td><button class='btn btn-danger'><a href='delete.php?deleteid=" . $country['id'] . "'>delete</a></button></td>";
-          echo "<td><button class='btn btn-warning'><a href='edit.php?editid=". $country['id']."'>edit</a></button></td>";
+          echo "<td><button class='btn btn-warning'><a href='edit.php?editid=" . $country['id'] . "'>edit</a></button></td>";
           echo "</tr>";
 
           // Increment the serial number for the next row

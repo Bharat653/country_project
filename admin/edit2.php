@@ -63,25 +63,36 @@ include '../database/connection.php';
         <h2>Edit Country</h2>
         <?php
         $result;
+
         if (isset($_GET['editid'])) {
-            $country_id = $_GET['editid'];
+            $state_id = $_GET['editid'];
             $database = new Database;
-            $result = $database->getedit(['country_id' => $country_id]);
+            $result = $database->getedit1(['state_id' => $state_id]);
         }
         ?>
-        <form action="country.php" method="post">
+        <form action="state.php" method="post">
             <!-- Add hidden input for country_id to send it to the server when the form is submitted -->
-            <input type="hidden" name="country_id" value="<?= $result["id"] ?>">
+            <input type="hidden" name="state_id" value="<?= $result["id"] ?>">
+
             <div class="form-group">
-                <label for="country_name">Enter Country Name:</label>
-                <input type="text" id="country_name" name="country_name" value="<?= $result["country_name"] ?>" placeholder="Enter Country" required>
+                    <label class="control-label">Country</label>
+                    <select name="country_id" id="country_id" class="form-control input-sm">
+                      <option>Select Country</option>
+                      <?php foreach ($countries as $country) : ?>
+                        <option value="<?= $result["country_id"]?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+            <div class="form-group">
+                <label for="state_name">Enter state Name:</label>
+                <input type="text" id="state_name" name="state_name" value="<?= $result["state_name"] ?>" placeholder="Enter Country" required>
             </div>
             <div class="form-group">
-                <label for="country_code">Enter Country Code:</label>
-                <input type="text" id="country_code" name="country_code" value="<?= $result["country_code"] ?>" placeholder="Enter Code" required>
+                <label for="state_code">Enter state Code:</label>
+                <input type="text" id="state_code" name="state_code" value="<?= $result["state_code"] ?>" placeholder="Enter Code" required>
             </div>
             <div class="form-group">
-                <input type="submit" name="updateEdit" class="btn btn-primary" value="Update">
+                <input type="submit" name="updateEdit1" class="btn btn-primary" value="Update">
             </div>
         </form>
     </div>

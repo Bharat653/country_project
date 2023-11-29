@@ -2,10 +2,9 @@
 include  '../database/connection.php';
 session_start();
 $result = "";
-// $citys = "";
-$citys = $database->getcitys();
-$countries = $database->getCountries();
-$states = $database->getstates();
+$city = "";
+$country_id = "";
+// $states = $database->getstates();
 if (isset($_REQUEST['submit'])) {
   if (($_REQUEST['city_name'] == "") || ($_REQUEST['city_currency'] == "")) {
     echo ("all field are required");
@@ -21,6 +20,8 @@ if (isset($_REQUEST['submit'])) {
     }
   }
 }
+$citys = $database->getcitys();
+$countries = $database->getCountries();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -98,8 +99,8 @@ if (isset($_REQUEST['submit'])) {
                 <div class="form-group">
                   <label class="control-label">State</label>
                   <select name="state_id" id="state_id" class="form-control input-sm">
-                    <option>Select  State</option>
-            
+                    <option>Select State</option>
+
                   </select>
                 </div>
                 <div class="form-group">
@@ -124,21 +125,34 @@ if (isset($_REQUEST['submit'])) {
       <table class="table table-dark">
         <thead>
           <tr>
+            <th scope="col">S/no</th>
             <th scope="col">city Name</th>
             <th scope="col">city currency</th>
+            <th scope="col">country_name</th>
+            <th scope="col">state_name</th>
           </tr>
         </thead>
         <?php
+        $serialnumber = 1;
         // Loop through the $countries array and display each row
-        foreach ($citys as $city) {
+        foreach ($citys  as $city) {
           echo "<tr>";
+          echo "<td>" . $serialnumber . "</td>";
           echo "<td>" . $city['city_name'] . "</td>";
           echo "<td>" . $city['city_currency'] . "</td>";
 
-          // $country_id = $city['country_id'];
-          // $country_name = $database->getCountryNameById($country_id); // Replace this with the actual function name you use
+          $country_id = $city['country_id'];
+          $country_name = $database->getCountryNameById($country_id); // Replace this with the actual function name you use
+          echo "<td>" . $country_name . "</td>";
+
+          $state_id = $city['state_id'];
+          $state_name = $database->getstateNameById($state_id);
+
+          echo "<td>" . $state_name . "</td>";
           // echo "<td>" . $country_name . "</td>";
+          // echo "<td><button class='btn btn-danger'><a href='delete3.php?deleteid=" . $city['id'] . "'>delete</a></button></td>";
           echo "</tr>";
+          $serialnumber++;
         }
         ?>
         <tbody>
@@ -152,16 +166,16 @@ if (isset($_REQUEST['submit'])) {
 
   </main>
   <script>
-    $(document).ready(function(){
-      jQuery('#country').change(function(){
-        var id=jQuery(this).val();
+    $(document).ready(function() {
+      jQuery('#country').change(function() {
+        var id = jQuery(this).val();
         jQuery.ajax({
-          type : 'post',
-          url : 'get_data.php',
-          data : {
-            id:id
+          type: 'post',
+          url: 'get_data.php',
+          data: {
+            id: id
           },
-          success : function(result){
+          success: function(result) {
             // alert(result);
             jQuery('#state_id').html(result);
             // console.log(result);

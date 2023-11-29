@@ -95,6 +95,16 @@ class Database
 
         return "Unknown Country"; // Default value if no country is found
     }
+    function getstateNameById($state_id)
+    {
+        $query = $this->db->prepare("SELECT state_name FROM state WHERE id = ?");
+        $query->execute([$state_id]);
+        $result1 = $query->fetch(PDO::FETCH_ASSOC);
+        if($result1){
+            return $result1['state_name'];
+        }
+        return"unkown country";
+    }
 
 
 
@@ -102,8 +112,10 @@ class Database
     {
         $city_name = $_POST['city_name'];
         $city_currency = $_POST['city_currency'];
-        $query = $this->db->prepare("INSERT INTO `city` (city_name,city_currency) VALUES  (?,?)");
-        $result = $query->execute([$city_name, $city_currency]);
+        $country_id = $_POST['country_id'];
+        $state_id = $_POST['state_id'];
+        $query = $this->db->prepare("INSERT INTO `city` (city_name,city_currency,country_id,state_id) VALUES  (?,?,?,?)");
+        $result = $query->execute([$city_name, $city_currency,$country_id,$state_id]);
         if ($result) {
             return true;
         }
@@ -132,11 +144,28 @@ class Database
         return $mysql->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // function getedit($id){
-    //     $mysql = $this->db->prepare("SELECT * FROM country1 where country_id=?");
-    //     $mysql->execute([$id]);
-    //     return $mysql->fetchAll(PDO::FETCH_ASSOC);
-    // }
+    function getedit($id){
+        $mysql = $this->db->prepare("SELECT * FROM country1 where id= :country_id");
+        $mysql->execute($id);
+        return $mysql->fetch(PDO::FETCH_ASSOC);
+    }
+
+    function updateEdit($data){
+        $mysql = $this->db->prepare("UPDATE country1 SET country_name = :country_name, country_code = :country_code WHERE id = :country_id");
+       return  $mysql->execute($data);
+    }
+
+    function getedit1($data1){
+        $mysql = $this->db->prepare("SELECT * FROM `state` where id= :state_id");
+        $mysql->execute($data1);
+        return $mysql->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    function updateEdit1($update){
+        $mysql = $this->db->prepare("UPDATE `state` SET state_name = :state_name, state_code = :state_code WHERE id = :state_id");
+        return $mysql->execute($update);
+    }
+    
 }
 
 // $database = new Database();

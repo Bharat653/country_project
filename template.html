@@ -472,3 +472,26 @@ $states = $database->getstates();
       <?php foreach ($states as $state) : ?>
       <option value="<?php echo $state['id']; ?>"><?php echo $state['state_name']; ?></option>
     <?php endforeach; ?> -->
+
+
+
+
+
+
+
+
+    // Check if the form is submitted for updating
+if (isset($_POST['updateEdit'])) {
+  // Get the form data
+  $country_id = $_POST['country_id'];
+  $country_name = $_POST['country_name'];
+  $country_code = $_POST['country_code'];
+
+  // Update the country information in the database
+  $result = $database->updateEdit(['country_id' => $country_id, 'country_name' => $country_name, 'country_code' => $country_code]);
+  if ($result) {
+    echo "Country updated successfully";
+  } else {
+    echo "Failed to update country";
+  }
+}

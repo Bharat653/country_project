@@ -1,9 +1,14 @@
 <?php
+session_start();
 require 'database/connection.php';
+
+
+
 $object = new Database();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $isLogged = $object->userLogin($_POST);
     if ($isLogged) {
+        $_SESSION["authuser"]=$isLogged;
           header('Location:admin/index.php');   
         // echo ("login successfully");
         // include("../dashboard/index.html");
